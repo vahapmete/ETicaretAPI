@@ -105,7 +105,7 @@ namespace ETicaretAPI.API
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _productWriteRepository.Remove(id);
+            await _productWriteRepository.Remove(id); 
             await _productWriteRepository.SaveAsync();
             return Ok();
         }
@@ -113,7 +113,7 @@ namespace ETicaretAPI.API
         public async Task<IActionResult> Upload()
         {
 
-            var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files);
+            var datas = await _storageService.UploadAsync("files", Request.Form.Files);
              await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
             {
                 FileName = d.fileName,

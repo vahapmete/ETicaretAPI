@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ETicaretAPI.Infrastructure.Sevices.Storage.Local
 {
-    public class LocalStorage : ILocalStorage
+    public class LocalStorage :Storage, ILocalStorage
     {
         readonly IWebHostEnvironment _webHostEnvironment;
         public LocalStorage(IWebHostEnvironment webHostEnvironment)
@@ -35,18 +35,18 @@ namespace ETicaretAPI.Infrastructure.Sevices.Storage.Local
         {
             return File.Exists(Path.Combine(path, fileName));
         }
-        async Task<string> FileRenameAsync(string fileName)
-        {
-            string newFileName = await Task.Run<string>(async () =>
-            {
-                string fileId = Guid.NewGuid().ToString();
-                string extension = Path.GetExtension(fileName);
-                string oldName = Path.GetFileNameWithoutExtension(fileName);
-                string updatedName = $"{fileId}_{NameEditor.CharacterRequlatory(oldName)}{extension}";
-                return updatedName;
-            });
-            return newFileName;
-        }
+        //async Task<string> FileRenameAsync(string fileName)
+        //{
+        //    string newFileName = await Task.Run<string>(async () =>
+        //    {
+        //        string fileId = Guid.NewGuid().ToString();
+        //        string extension = Path.GetExtension(fileName);
+        //        string oldName = Path.GetFileNameWithoutExtension(fileName);
+        //        string updatedName = $"{fileId}_{NameEditor.CharacterRequlatory(oldName)}{extension}";
+        //        return updatedName;
+        //    });
+        //    return newFileName;
+        //}
          async Task<bool> CopyFileAsync(string path, IFormFile file)
         {
             try
