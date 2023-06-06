@@ -6,12 +6,13 @@ using ETicaretAPI.Persistence;
 using FluentValidation.AspNetCore;
 using ETicaretAPI.Infrastructure.Sevices.Storage.Local;
 using ETicaretAPI.Infrastructure.Sevices.Storage.Azure;
+using ETicaretAPI.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
-//builder.Services.AddStorage<LocalStorage>();
+builder.Services.AddApplicationServices();
 
 builder.Services.AddStorage<AzureStorage>();
 
