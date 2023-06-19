@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ETicaretAPI.Application.Features.Commands.ProductImageFile.RemoveProductImage
+namespace ETicaretAPI.Application.Features.Commands.ProductImageFiles.RemoveProductImage
 {
     public class RemoveProductImageCommandHandler : IRequestHandler<RemoveProductImageCommandRequest, RemoveProductImageCommandResponse>
     {

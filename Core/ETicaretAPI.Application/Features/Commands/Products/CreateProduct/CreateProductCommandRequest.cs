@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ETicaretAPI.Application.Features.Commands.Product.UpdateProduct
+namespace ETicaretAPI.Application.Features.Commands.Products.CreateProduct
 {
-    public class UpdateProductCommandRequest:IRequest<UpdateProductCommandResponse>
+    public class CreateProductCommandRequest:IRequest<CreateProductCommandResponse>
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public int Stock { get; set; }
         public float Price { get; set; }

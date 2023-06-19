@@ -1,7 +1,7 @@
-using ETicaretAPI.Application.Features.Commands.Product.CreateProduct;
-using ETicaretAPI.Application.Features.Commands.Product.RemoveProduct;
-using ETicaretAPI.Application.Features.Commands.Product.UpdateProduct;
-using ETicaretAPI.Application.Features.Commands.ProductImageFile.RemoveProductImage;
+using ETicaretAPI.Application.Features.Commands.Products.CreateProduct;
+using ETicaretAPI.Application.Features.Commands.Products.RemoveProduct;
+using ETicaretAPI.Application.Features.Commands.Products.UpdateProduct;
+using ETicaretAPI.Application.Features.Commands.ProductImageFiles.RemoveProductImage;
 using ETicaretAPI.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ETicaretAPI.Application.Features.Queries.GetProductImages;
 using ETicaretAPI.Application.Features.Queries.Product.GetAllProduct;
