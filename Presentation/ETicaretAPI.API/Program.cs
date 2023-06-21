@@ -7,6 +7,9 @@ using FluentValidation.AspNetCore;
 using ETicaretAPI.Infrastructure.Sevices.Storage.Local;
 using ETicaretAPI.Infrastructure.Sevices.Storage.Azure;
 using ETicaretAPI.Application;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,21 @@ builder.Services
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Admin", options =>
+{
+    options.TokenValidationParameters = new() 
+    {
+        ValidateAudience = true,
+        ValidateIssuer = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        
+        ValidAudience= builder.Configuration["TokenParameters:Audience"],
+        ValidIssuer = builder.Configuration["TokenParameters:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenParameters:SecurityKey"]))
+    };
+});
 
 var app = builder.Build();
 
@@ -39,7 +57,7 @@ app.UseStaticFiles();
 app.UseCors();
 app.UseHttpsRedirection();
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

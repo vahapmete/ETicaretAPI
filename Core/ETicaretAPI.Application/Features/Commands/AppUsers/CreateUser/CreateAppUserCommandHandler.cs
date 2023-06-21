@@ -20,7 +20,7 @@ namespace ETicaretAPI.Application.Features.Commands.AppUsers.CreateUser
         }
 
         public async Task<CreateAppUserCommandResponse> Handle(CreateAppUserCommandRequest request, CancellationToken cancellationToken)
-        {
+        { 
             IdentityResult result = await _userManager.CreateAsync(new()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -30,7 +30,7 @@ namespace ETicaretAPI.Application.Features.Commands.AppUsers.CreateUser
             }, request.Password);
 
             CreateAppUserCommandResponse response = new() { Result = result.Succeeded };
-
+               
 
             if (result.Succeeded)
             {

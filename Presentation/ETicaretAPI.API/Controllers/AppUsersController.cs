@@ -1,4 +1,5 @@
 ﻿using ETicaretAPI.Application.Features.Commands.AppUsers.CreateUser;
+using ETicaretAPI.Application.Features.Commands.AppUsers.LoginUser;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,12 @@ namespace ETicaretAPI.API.Controllers
         public async  Task<IActionResult> CreateAppUser(CreateAppUserCommandRequest createAppUserCommandRequest)
         {
             CreateAppUserCommandResponse response= await _mediatr.Send(createAppUserCommandRequest);
+            return Ok(response);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Login(LoginUserCommandRequest loginUserCommandRequest)
+        {
+            LoginUserCommandResponse response = await _mediatr.Send(loginUserCommandRequest);
             return Ok(response);
         }
     }
