@@ -1,4 +1,6 @@
-﻿using ETicaretAPI.Application.Exceptions;
+﻿using ETicaretAPI.Application.DTOs.AppUsers;
+using ETicaretAPI.Application.Exceptions;
+using ETicaretAPI.Application.Services.AppUser;
 using ETicaretAPI.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -12,38 +14,28 @@ namespace ETicaretAPI.Application.Features.Commands.AppUsers.CreateUser
 {
     public class CreateAppUserCommandHandler : IRequestHandler<CreateAppUserCommandRequest, CreateAppUserCommandResponse>
     {
-        readonly UserManager<AppUser> _userManager;
+        readonly IUserService _userService;
 
-        public CreateAppUserCommandHandler(UserManager<AppUser> userManager)
+        public CreateAppUserCommandHandler(IUserService userService)
         {
-            _userManager = userManager;
+            _userService = userService;
         }
 
         public async Task<CreateAppUserCommandResponse> Handle(CreateAppUserCommandRequest request, CancellationToken cancellationToken)
-        { 
-            IdentityResult result = await _userManager.CreateAsync(new()
+        {
+            CreateAppUserResponseDto responseDto= await _userService.CreateAsync(new()
             {
-                Id = Guid.NewGuid().ToString(),
-                UserName = request.UserName,
-                Name = request.Name,
                 Email = request.Email,
-            }, request.Password);
-
-            CreateAppUserCommandResponse response = new() { Result = result.Succeeded };
-               
-
-            if (result.Succeeded)
+                Name = request.Name,
+                Password = request.Password,
+                PasswordConfirm = request.PasswordConfirm,
+                UserName = request.UserName
+            });
+            return new()
             {
-                response.Message = "User created successfuly!";
-            }
-            else
-            {
-                foreach(var error in result.Errors)
-                {
-                    response.Message += $"{error.Code} - {error.Description}\n";
-                }
-            }
-            return response;
+                Message = responseDto.Message,
+                Result=responseDto.Result,
+            };
                 //throw new AppUserCreateFailedException();
 
         }
