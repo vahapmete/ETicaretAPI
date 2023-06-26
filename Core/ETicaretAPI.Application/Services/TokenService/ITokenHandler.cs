@@ -10,6 +10,7 @@ namespace ETicaretAPI.Application.Services.TokenService
     public interface ITokenHandler
     {
         Token CreateAccessToken(int expirationMinute);
+        string CreateRefreshToken();
     }
 }
   
