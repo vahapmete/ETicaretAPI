@@ -1,11 +1,13 @@
 ﻿using ETicaretAPI.Application.DTOs;
 using ETicaretAPI.Application.Services.TokenService;
+using ETicaretAPI.Domain.Entities.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +23,7 @@ namespace ETicaretAPI.Infrastructure.Sevices.TokenService
             _configuration = configuration;
         }
 
-        public Token CreateAccessToken(int expirationSecond)
+        public Token CreateAccessToken(int expirationSecond,AppUser user)
         {
             Token token = new Token();
             SymmetricSecurityKey symmetricSecurityKey = new(Encoding.UTF8.GetBytes(_configuration["TokenParameters:SecurityKey"]));
@@ -31,7 +33,8 @@ namespace ETicaretAPI.Infrastructure.Sevices.TokenService
                issuer: _configuration["TokenParameters:Issuer"],
                expires: token.Expiration,
                notBefore: DateTime.UtcNow,
-               signingCredentials: signingCredentials
+               signingCredentials: signingCredentials,
+               claims:new List<Claim> { new(ClaimTypes.Name,user.UserName)}
                 );
             JwtSecurityTokenHandler tokenHandler = new();
             token.AccessToken = tokenHandler.WriteToken(securityToken);

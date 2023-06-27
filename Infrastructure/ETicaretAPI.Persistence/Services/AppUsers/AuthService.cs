@@ -70,8 +70,9 @@ namespace ETicaretAPI.Persistence.Services.AppUsers
             else
                 throw new Exception("Invalid external authentication");
 
-             Token token = _tokenHandler.CreateAccessToken(15);
-             await  _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 5);
+             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime,user);
+             await  _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 15);
+            
              return token;
             
         }
@@ -87,11 +88,11 @@ namespace ETicaretAPI.Persistence.Services.AppUsers
 
             if (!(user == null))
             {
-                var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+                SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
                 if (result.Succeeded)
                 {
-                    Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
-                    await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 5);
+                    Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime,user);
+                    await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 15);
                     return token;
                 }
             }
@@ -107,7 +108,7 @@ namespace ETicaretAPI.Persistence.Services.AppUsers
            AppUser? user = await _userManager.Users.FirstOrDefaultAsync(u=>u.RefreshToken==refreshToken);
             if (user != null && user?.RefreshTokenEndDate>DateTime.UtcNow)
             {
-                Token token = _tokenHandler.CreateAccessToken(15);
+                Token token = _tokenHandler.CreateAccessToken(15,user);
                 await _userService.UpdateRefreshToken(token.RefreshToken,user, token.Expiration, 15);
                 return token;
             }
