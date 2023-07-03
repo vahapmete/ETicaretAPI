@@ -1,6 +1,9 @@
 ﻿using ETicaretAPI.Application.DTOs;
+using ETicaretAPI.Application.Exceptions;
+using ETicaretAPI.Application.Services.AppUser;
 using ETicaretAPI.Application.Services.TokenService;
 using ETicaretAPI.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,10 +20,12 @@ namespace ETicaretAPI.Infrastructure.Sevices.TokenService
     public class TokenHandler : ITokenHandler
     {
         IConfiguration _configuration;
+        readonly UserManager<AppUser> _userManager;
 
-        public TokenHandler(IConfiguration configuration)
+        public TokenHandler(IConfiguration configuration, UserManager<AppUser> userManager)
         {
             _configuration = configuration;
+            _userManager = userManager;
         }
 
         public Token CreateAccessToken(int expirationSecond,AppUser user)
@@ -48,6 +53,17 @@ namespace ETicaretAPI.Infrastructure.Sevices.TokenService
             using RandomNumberGenerator random = RandomNumberGenerator.Create();
             random.GetBytes(number);
             return Convert.ToBase64String(number);
+        }
+        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenLifeTime)
+        {
+            if (user != null)
+            {
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenEndDate = accessTokenDate.AddSeconds(addOnAccessTokenLifeTime);
+                await _userManager.UpdateAsync(user);
+            }
+            else
+                throw new NotFoundUserException();
         }
     }
 }

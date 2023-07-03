@@ -10,9 +10,9 @@ namespace ETicaretAPI.Application.Services.TokenService
 {
     public interface ITokenHandler
     {
-        Token CreateAccessToken(int expirationMinute, Domain.Entities.Identity.AppUser user);
+        Token CreateAccessToken(int expirationSecond, Domain.Entities.Identity.AppUser user);
         string CreateRefreshToken();
-
+        Task UpdateRefreshToken(string refreshToken, Domain.Entities.Identity.AppUser user, DateTime accessTokenDate, int addOnAccessTokenLifeTime);
     }
 }
   

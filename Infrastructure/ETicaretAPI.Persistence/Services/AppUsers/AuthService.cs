@@ -20,7 +20,7 @@ namespace ETicaretAPI.Persistence.Services.AppUsers
     public class AuthService : IAuthService
     {
         readonly IConfiguration _configuration;
-        readonly ITokenHandler _tokenHandler;
+        readonly ITokenHandler _tokenHandler; 
         readonly UserManager<AppUser> _userManager;
         readonly SignInManager<AppUser> _signInManager;
         readonly IUserService _userService;
@@ -71,7 +71,7 @@ namespace ETicaretAPI.Persistence.Services.AppUsers
                 throw new Exception("Invalid external authentication");
 
              Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime,user);
-             await  _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 15);
+             await _tokenHandler.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 300);
             
              return token;
             
@@ -92,7 +92,7 @@ namespace ETicaretAPI.Persistence.Services.AppUsers
                 if (result.Succeeded)
                 {
                     Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime,user);
-                    await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 15);
+                    await _tokenHandler.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 300);
                     return token;
                 }
             }
@@ -108,8 +108,8 @@ namespace ETicaretAPI.Persistence.Services.AppUsers
            AppUser? user = await _userManager.Users.FirstOrDefaultAsync(u=>u.RefreshToken==refreshToken);
             if (user != null && user?.RefreshTokenEndDate>DateTime.UtcNow)
             {
-                Token token = _tokenHandler.CreateAccessToken(15,user);
-                await _userService.UpdateRefreshToken(token.RefreshToken,user, token.Expiration, 15);
+                Token token = _tokenHandler.CreateAccessToken(900,user);
+                await _tokenHandler.UpdateRefreshToken(token.RefreshToken,user, token.Expiration, 300);
                 return token;
             }
             else

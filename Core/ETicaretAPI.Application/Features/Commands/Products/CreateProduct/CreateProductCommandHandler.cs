@@ -6,16 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ETicaretAPI.Application.Hubs;
 
 namespace ETicaretAPI.Application.Features.Commands.Products.CreateProduct
 {
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
     {
         readonly IProductWriteRepository _productWriteRepository;
-
-        public CreateProductCommandHandler(IProductWriteRepository productWriteRepository)
+        private readonly IProductHubService _productHubService;
+        public CreateProductCommandHandler(IProductWriteRepository productWriteRepository, IProductHubService productHubService)
         {
             _productWriteRepository = productWriteRepository;
+            _productHubService = productHubService;
         }
 
         public async Task<CreateProductCommandResponse> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
@@ -27,6 +29,7 @@ namespace ETicaretAPI.Application.Features.Commands.Products.CreateProduct
                 Stock = request.Stock,
             });
             await _productWriteRepository.SaveAsync();
+            await _productHubService.ProductAddedMessageAsync($"{request.Name} named product added!");
             return new();
         }
     }
